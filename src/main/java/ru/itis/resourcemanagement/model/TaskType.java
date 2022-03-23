@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @NoArgsConstructor
@@ -22,6 +23,12 @@ public class TaskType {
 
     private double constantBias = .0;
 
+    private double manHourPerSquareMeterDraft;
+
+    private double constantBiasDraft = .0;
+
     @OneToMany
     private List<TaskTypeProperty> taskTypeProperties;
+
+    private LocalDateTime lastParamsUpdate;
 }
