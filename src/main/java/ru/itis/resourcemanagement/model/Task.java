@@ -17,10 +17,8 @@ public class Task {
     @Id
     private Long id;
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private double factTime = .0;
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private double estimate;
 
     @Min(0)
@@ -28,5 +26,8 @@ public class Task {
 
     @ManyToOne(optional = false)
     private TaskType type;
+
+    @ManyToOne
+    private User assignee;
 
 }
