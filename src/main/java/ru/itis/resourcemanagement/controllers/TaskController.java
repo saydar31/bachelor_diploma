@@ -26,15 +26,21 @@ public class TaskController {
     private final ModelMapper modelMapper;
 
     @PostMapping
-    public ResponseEntity<Void> createTask(Task task){
+    public ResponseEntity<Void> createTask(Task task) {
         taskService.createTask(task);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{taskId}")
+    public ResponseEntity<TaskListInfo> getTask(@PathVariable long taskId,
+                                                @AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(taskService.getTask(taskId, user));
     }
 
     @PostMapping("/{taskId}/track")
     public ResponseEntity<TimeEntryDto> track(@PathVariable long taskId,
                                               @AuthenticationPrincipal User user,
-                                              TimeEntryDto timeEntry){
+                                              TimeEntryDto timeEntry) {
         TimeEntry created = taskService.track(taskId, timeEntry, user);
         TimeEntryDto dto = modelMapper.map(created, TimeEntryDto.class);
         return ResponseEntity.ok(dto);
@@ -42,7 +48,7 @@ public class TaskController {
 
     @GetMapping
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<TaskListInfo>> getTasks(@AuthenticationPrincipal User user){
+    public ResponseEntity<List<TaskListInfo>> getTasks(@AuthenticationPrincipal User user) {
         List<TaskListInfo> tasksForUser = taskService.getTasksForUser(user);
         return ResponseEntity.ok(tasksForUser);
     }

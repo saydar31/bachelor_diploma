@@ -63,4 +63,10 @@ public class TaskServiceImpl implements TaskService {
     public List<TaskListInfo> getTasksForUser(User user) {
         return taskRepository.getTaskByAssignee(user);
     }
+
+    @Override
+    public TaskListInfo getTask(long taskId, User user) {
+        return taskRepository.findTaskByIdAndAssignee(taskId, user)
+                .orElseThrow(NotFoundException::new);
+    }
 }

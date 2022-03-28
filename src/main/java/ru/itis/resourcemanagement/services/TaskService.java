@@ -19,4 +19,6 @@ public interface TaskService {
     List<Task> findByTaskType(TaskType taskType);
 
     List<TaskListInfo> getTasksForUser(User user);
+
+    TaskListInfo getTask(long taskId, User user);
 }
