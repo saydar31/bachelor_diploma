@@ -40,7 +40,7 @@ public class TaskController {
     @PostMapping("/{taskId}/track")
     public ResponseEntity<TimeEntryDto> track(@PathVariable long taskId,
                                               @AuthenticationPrincipal User user,
-                                              TimeEntryDto timeEntry) {
+                                              @RequestBody TimeEntryDto timeEntry) {
         TimeEntry created = taskService.track(taskId, timeEntry, user);
         TimeEntryDto dto = modelMapper.map(created, TimeEntryDto.class);
         return ResponseEntity.ok(dto);

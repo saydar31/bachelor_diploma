@@ -30,4 +30,6 @@ public class Task {
     @ManyToOne
     private User assignee;
 
+    @ManyToOne
+    private Project project;
 }

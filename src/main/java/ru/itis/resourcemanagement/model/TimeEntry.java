@@ -3,6 +3,7 @@ package ru.itis.resourcemanagement.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,6 +18,8 @@ public class TimeEntry {
 
     @Column(updatable = false)
     private double time;
+
+    private LocalDate date;
 
     private String comment;
 

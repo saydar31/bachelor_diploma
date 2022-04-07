@@ -31,33 +31,7 @@ public class TaskTypeServiceImpl implements TaskTypeService {
 
     @Scheduled(cron = "0 0 2 * * MON-FRI")
     public void recomputeStandards() {
-        taskTypeRepository.findAll()
-                .forEach(this::recomputeStandard);
+        taskTypeRepository.updateDraftsByLeastSquares();
     }
 
-    public void recomputeStandard(TaskType taskType) {
-        //TODO: move computations to db
-        List<Task> tasks = taskService.findByTaskType(taskType);
-        if (tasks.isEmpty()) {
-            return;
-        }
-        double xySum = tasks.stream()
-                .mapToDouble(task -> task.getSquare() * task.getFactTime())
-                .sum();
-        double xSum = tasks.stream()
-                .mapToDouble(Task::getSquare)
-                .sum();
-        double ySum = tasks.stream()
-                .mapToDouble(Task::getFactTime)
-                .sum();
-        double xSquaredSum = tasks.stream()
-                .mapToDouble(t -> t.getSquare() * t.getSquare())
-                .sum();
-        double hourPerMeterSquared = (xySum - xSum * ySum) / (xSquaredSum - xSum * xSum);
-        double constantBias = (ySum - hourPerMeterSquared * xSum) / tasks.size();
-        taskType.setManHourPerSquareMeterDraft(hourPerMeterSquared);
-        taskType.setConstantBiasDraft(constantBias);
-        taskType.setLastParamsUpdate(LocalDateTime.now());
-        taskTypeRepository.save(taskType);
-    }
 }

@@ -2,6 +2,6 @@ package ru.itis.resourcemanagement.model;
 
 public enum Position {
     EMPLOYEE,
-    SUPERVISOR,
+    TEAM_SUPERVISOR,
     PROJECT_SUPERVISOR
 }

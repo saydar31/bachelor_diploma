@@ -48,6 +48,8 @@ public class TaskServiceImpl implements TaskService {
         task.setFactTime(task.getFactTime() + dto.getTime());
         TimeEntry timeEntry = TimeEntry.builder()
                 .time(dto.getTime())
+                .date(dto.getDate())
+                .comment(dto.getComment())
                 .task(task)
                 .employee(user)
                 .build();

@@ -15,6 +15,8 @@ public interface TaskListInfo {
 
     UserInfo getAssignee();
 
+    ProjectInfo getProject();
+
     interface TaskTypeInfo {
         Long getId();
 
@@ -31,5 +33,11 @@ public interface TaskListInfo {
         String getMiddleName();
 
         Position getPosition();
+    }
+
+    interface ProjectInfo {
+        Long getId();
+
+        String getName();
     }
 }
