@@ -1,6 +1,5 @@
 package ru.itis.resourcemanagement.services;
 
-import ru.itis.resourcemanagement.dto.TaskDto;
 import ru.itis.resourcemanagement.dto.TimeEntryDto;
 import ru.itis.resourcemanagement.dto.projections.TaskListInfo;
 import ru.itis.resourcemanagement.model.Task;
@@ -21,4 +20,6 @@ public interface TaskService {
     List<TaskListInfo> getTasksForUser(User user);
 
     TaskListInfo getTask(long taskId, User user);
+
+    List<TaskListInfo> getTasksForProject(Long id);
 }

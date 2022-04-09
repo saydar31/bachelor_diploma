@@ -17,6 +17,10 @@ public interface TaskListInfo {
 
     ProjectInfo getProject();
 
+    default String getName(){
+        return String.format("%s-%s", getProject().getName(), getId());
+    }
+
     interface TaskTypeInfo {
         Long getId();
 

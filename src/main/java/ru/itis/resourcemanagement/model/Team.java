@@ -18,6 +18,8 @@ public class Team {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    private String name;
+
     @ManyToOne
     private User supervisor;
 
