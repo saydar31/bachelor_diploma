@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -28,4 +29,7 @@ public class User {
 
     @OneToMany
     private List<Task> tasks;
+
+    @ManyToMany
+    private Set<Team> teams;
 }

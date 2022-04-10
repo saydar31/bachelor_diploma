@@ -23,6 +23,6 @@ public class Team {
     @ManyToOne
     private User supervisor;
 
-    @OneToMany
+    @ManyToMany(mappedBy = "teams")
     private List<User> members;
 }
