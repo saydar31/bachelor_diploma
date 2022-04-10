@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.itis.resourcemanagement.dto.TeamDto;
 import ru.itis.resourcemanagement.dto.UserDto;
 import ru.itis.resourcemanagement.dto.projections.TeamInfo;
+import ru.itis.resourcemanagement.dto.projections.UserInfo;
+import ru.itis.resourcemanagement.model.Team;
 import ru.itis.resourcemanagement.model.User;
 import ru.itis.resourcemanagement.services.impl.TeamService;
 
@@ -27,6 +29,12 @@ public class TeamController {
         return ResponseEntity.ok(teamService.getTeams());
     }
 
+    @PostMapping
+    @PreAuthorize("hasAuthority('PROJECT_SUPERVISOR')")
+    public ResponseEntity<TeamInfo> createTeam(@RequestBody TeamDto teamDto){
+        return ResponseEntity.ok(teamService.createTeam(teamDto));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<TeamInfo> getTeam(@PathVariable Long id) {
         return ResponseEntity.of(teamService.getTeam(id));
@@ -34,7 +42,7 @@ public class TeamController {
 
     @PostMapping("/{id}")
     @PreAuthorize("hasAuthority('PROJECT_SUPERVISOR')")
-    public ResponseEntity<TeamInfo> updateTeam(@PathVariable Long id, @RequestBody TeamDto teamDto, @AuthenticationPrincipal User user){
+    public ResponseEntity<TeamInfo> updateTeam(@PathVariable Long id, @RequestBody TeamDto teamDto, @AuthenticationPrincipal User user) {
         return ResponseEntity.ok(teamService.updateTeam(id, teamDto, user));
     }
 
@@ -44,7 +52,7 @@ public class TeamController {
     }
 
     @GetMapping("/{id}/availableUsers")
-    public ResponseEntity<List<UserDto>> getAvailableUsers(@PathVariable Long id){
+    public ResponseEntity<List<UserInfo>> getAvailableUsers(@PathVariable Long id) {
         return ResponseEntity.ok(teamService.getAvailableMembers(id));
     }
 }

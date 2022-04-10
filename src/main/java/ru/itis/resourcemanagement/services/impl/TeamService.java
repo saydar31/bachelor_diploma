@@ -6,6 +6,7 @@ import ru.itis.resourcemanagement.dto.TeamDto;
 import ru.itis.resourcemanagement.dto.TeamResponse;
 import ru.itis.resourcemanagement.dto.UserDto;
 import ru.itis.resourcemanagement.dto.projections.TeamInfo;
+import ru.itis.resourcemanagement.dto.projections.UserInfo;
 import ru.itis.resourcemanagement.exceptions.BadRequestException;
 import ru.itis.resourcemanagement.exceptions.NotFoundException;
 import ru.itis.resourcemanagement.model.Position;
@@ -51,13 +52,10 @@ public class TeamService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public List<UserDto> getAvailableMembers(Long id) {
+    public List<UserInfo> getAvailableMembers(Long id) {
         Team team = teamRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
-        List<User> users = userService.findNewAvailableUsers(team);
-        return users.stream()
-                .map(user -> modelMapper.map(user, UserDto.class))
-                .collect(Collectors.toUnmodifiableList());
+        return userService.findNewAvailableUsers(team);
     }
 
     @Transactional
@@ -65,17 +63,33 @@ public class TeamService {
         Team team = teamRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
         List<User> members = userService.findByIdIn(teamDto.getUserIdList());
-        if (!isAllisEmployee(members)){
+        if (notAllPositionsEmployee(members)) {
             throw new BadRequestException("members", "NON_EMPLOYEE_FOUND");
         }
         team.setMembers(members);
-        members.forEach(member -> member.getTeams().add(team));
         team.setName(teamDto.getName());
         return modelMapper.map(team, TeamResponse.class);
     }
 
-    private boolean isAllisEmployee(Collection<User> users){
-        return users.stream()
+    private boolean notAllPositionsEmployee(Collection<User> users) {
+        return !users.stream()
                 .allMatch(u -> Position.EMPLOYEE.equals(u.getPosition()));
+    }
+
+    @Transactional
+    public TeamInfo createTeam(TeamDto teamDto) {
+        Team team = new Team();
+        List<User> members = userService.findByIdIn(teamDto.getUserIdList());
+        if (notAllPositionsEmployee(members)) {
+            throw new BadRequestException("members", "NON_EMPLOYEE_FOUND");
+        }
+        team.setMembers(members);
+        team.setName(teamDto.getName());
+        User supervisor = userService.findById(teamDto.getSupervisorId())
+                .filter(user -> user.getPosition().equals(Position.TEAM_SUPERVISOR))
+                .orElseThrow(() -> new BadRequestException("supervisorId", "NOT_FOUND"));
+        team.setSupervisor(supervisor);
+        teamRepository.save(team);
+        return modelMapper.map(team, TeamResponse.class);
     }
 }

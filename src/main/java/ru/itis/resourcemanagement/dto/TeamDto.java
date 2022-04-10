@@ -11,5 +11,6 @@ import java.util.List;
 @NoArgsConstructor
 public class TeamDto {
     private String name;
+    private Long supervisorId;
     private List<Long> userIdList;
 }
