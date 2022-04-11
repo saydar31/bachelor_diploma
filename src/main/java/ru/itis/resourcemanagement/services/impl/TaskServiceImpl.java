@@ -3,12 +3,10 @@ package ru.itis.resourcemanagement.services.impl;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import ru.itis.resourcemanagement.dto.TimeEntryDto;
+import ru.itis.resourcemanagement.dto.projections.ProjectInfo;
 import ru.itis.resourcemanagement.dto.projections.TaskListInfo;
 import ru.itis.resourcemanagement.exceptions.NotFoundException;
-import ru.itis.resourcemanagement.model.Task;
-import ru.itis.resourcemanagement.model.TaskType;
-import ru.itis.resourcemanagement.model.TimeEntry;
-import ru.itis.resourcemanagement.model.User;
+import ru.itis.resourcemanagement.model.*;
 import ru.itis.resourcemanagement.repositories.TaskRepository;
 import ru.itis.resourcemanagement.repositories.TimeEntryRepository;
 import ru.itis.resourcemanagement.services.TaskService;
@@ -16,19 +14,25 @@ import ru.itis.resourcemanagement.services.TaskTypeService;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
     private final TaskTypeService taskTypeService;
+    private final TeamService teamService;
     private final TimeEntryRepository timeEntryRepository;
+    private final ProjectService projectService;
 
     public TaskServiceImpl(TaskRepository taskRepository,
-                           @Lazy TaskTypeService taskTypeService, TimeEntryRepository timeEntryRepository) {
+                           @Lazy TaskTypeService taskTypeService, TeamService teamService, TimeEntryRepository timeEntryRepository,
+                           @Lazy ProjectService projectService) {
         this.taskRepository = taskRepository;
         this.taskTypeService = taskTypeService;
+        this.teamService = teamService;
         this.timeEntryRepository = timeEntryRepository;
+        this.projectService = projectService;
     }
 
     @Override
@@ -62,8 +66,18 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @Transactional
     public List<TaskListInfo> getTasksForUser(User user) {
-        return taskRepository.getTaskByAssignee(user);
+        if (user.getPosition().equals(Position.EMPLOYEE)) {
+            return taskRepository.getTaskByAssignee(user);
+        } else if (user.getPosition().equals(Position.PROJECT_SUPERVISOR)) {
+            List<Long> projectIdList = projectService.getProjects(user).stream()
+                    .map(ProjectInfo::getId)
+                    .collect(Collectors.toUnmodifiableList());
+            return taskRepository.findAllByProjectIdIn(projectIdList);
+        } else {
+            throw new NotFoundException();
+        }
     }
 
     @Override
@@ -75,5 +89,15 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<TaskListInfo> getTasksForProject(Long id) {
         return taskRepository.getTaskByProjectId(id);
+    }
+
+    @Override
+    @Transactional
+    public void assignTaskToTeam(Long id, Long teamId, User user) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(NotFoundException::new);
+        Team team = teamService.findTeam(teamId)
+                .orElseThrow(NotFoundException::new);
+        task.setTeam(team);
     }
 }

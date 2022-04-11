@@ -32,4 +32,7 @@ public class User {
 
     @ManyToMany
     private Set<Team> teams;
+
+    @OneToMany(mappedBy = "supervisor")
+    private Set<Project> projects;
 }

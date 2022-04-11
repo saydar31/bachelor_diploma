@@ -92,4 +92,8 @@ public class TeamService {
         teamRepository.save(team);
         return modelMapper.map(team, TeamResponse.class);
     }
+
+    public Optional<Team> findTeam(Long teamId) {
+        return teamRepository.findById(teamId);
+    }
 }

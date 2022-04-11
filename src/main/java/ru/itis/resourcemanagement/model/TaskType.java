@@ -1,8 +1,6 @@
 package ru.itis.resourcemanagement.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -11,6 +9,8 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
+@AllArgsConstructor
+@Builder
 @Entity
 public class TaskType {
     @Id

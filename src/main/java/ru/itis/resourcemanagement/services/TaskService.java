@@ -22,4 +22,6 @@ public interface TaskService {
     TaskListInfo getTask(long taskId, User user);
 
     List<TaskListInfo> getTasksForProject(Long id);
+
+    void assignTaskToTeam(Long id, Long teamId, User user);
 }
