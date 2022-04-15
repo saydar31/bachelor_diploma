@@ -22,4 +22,7 @@ public interface TaskTypeRepository extends JpaRepository<TaskType, Long> {
             "where new_drafts.type_id = task_type.id",
             nativeQuery = true)
     void updateDraftsByLeastSquares();
+
+    @Query("select distinct(tt) from TaskType tt left join fetch tt.taskTypeProperties")
+    List<TaskType> getTypesWithProperties();
 }

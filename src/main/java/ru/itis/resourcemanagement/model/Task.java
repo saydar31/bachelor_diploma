@@ -36,4 +36,9 @@ public class Task {
 
     @ManyToOne
     private Project project;
+
+    private boolean abnormal;
+
+    @Enumerated(EnumType.STRING)
+    private TaskStatus taskStatus;
 }

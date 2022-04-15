@@ -9,3 +9,6 @@ select tt.id,
 from task t
          inner join task_type tt on t.type_id = tt.id
 group by tt.id;
+
+--changeset resource_management:2
+alter table if exists task add column if not exists abnormal boolean default false not null

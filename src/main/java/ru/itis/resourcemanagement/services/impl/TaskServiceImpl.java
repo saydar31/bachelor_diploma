@@ -1,6 +1,7 @@
 package ru.itis.resourcemanagement.services.impl;
 
 import org.springframework.context.annotation.Lazy;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import ru.itis.resourcemanagement.dto.TimeEntryDto;
 import ru.itis.resourcemanagement.dto.projections.ProjectInfo;
@@ -99,5 +100,10 @@ public class TaskServiceImpl implements TaskService {
         Team team = teamService.findTeam(teamId)
                 .orElseThrow(NotFoundException::new);
         task.setTeam(team);
+    }
+
+    @Scheduled(cron = "0 0 2 * * MON-FRI")
+    public void setAbnormalTasks(){
+        taskRepository.setAbnormalTasks();
     }
 }

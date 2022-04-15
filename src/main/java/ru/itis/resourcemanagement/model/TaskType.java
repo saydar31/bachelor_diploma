@@ -31,4 +31,9 @@ public class TaskType {
     private List<TaskTypeProperty> taskTypeProperties;
 
     private LocalDateTime lastParamsUpdate;
+
+    public void updateEstimateParams() {
+        manHourPerSquareMeter = manHourPerSquareMeterDraft;
+        constantBias = constantBiasDraft;
+    }
 }
