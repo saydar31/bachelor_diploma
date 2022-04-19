@@ -30,6 +30,8 @@ dependencies {
 	implementation 'com.github.haifengl:smile-core:2.6.0'
 	// https://mvnrepository.com/artifact/com.github.haifengl/smile-math
 	implementation 'com.github.haifengl:smile-math:2.6.0'
+	// https://mvnrepository.com/artifact/org.bytedeco/openblas-platform
+	implementation 'org.bytedeco:openblas-platform:0.3.19-1.5.7'
 
 
 	compileOnly 'org.projectlombok:lombok'

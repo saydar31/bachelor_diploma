@@ -38,6 +38,7 @@ public class TaskController {
     }
 
     @PostMapping("/{taskId}/track")
+    @PreAuthorize("hasAuthority('EMPLOYEE')")
     public ResponseEntity<TimeEntryDto> track(@PathVariable long taskId,
                                               @AuthenticationPrincipal User user,
                                               @RequestBody TimeEntryDto timeEntry) {

@@ -28,6 +28,7 @@ public class LassoService {
             ResultSet resultSet = statement.executeQuery();
             DataFrame dataFrame = DataFrame.of(resultSet);
             LinearModel lasso = LASSO.fit(Formula.lhs("y"), dataFrame);
+            System.out.println(lasso);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

@@ -1,9 +1,7 @@
 package ru.itis.resourcemanagement.model;
 
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-import ru.itis.resourcemanagement.services.impl.TeamService;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
