@@ -2,9 +2,7 @@ package ru.itis.resourcemanagement.controllers;
 
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.itis.resourcemanagement.dto.LoginDto;
 import ru.itis.resourcemanagement.dto.TokenPair;
 import ru.itis.resourcemanagement.services.impl.AuthService;
@@ -18,8 +16,15 @@ public class LoginController {
         this.authService = authService;
     }
 
+    @PostMapping
     public ResponseEntity<TokenPair> login(@RequestBody LoginDto loginDto) {
         TokenPair tokenPair = authService.login(loginDto);
+        return ResponseEntity.ok(tokenPair);
+    }
+
+    @GetMapping("/{refreshToken}")
+    public ResponseEntity<TokenPair> refresh(@PathVariable String refreshToken){
+        TokenPair tokenPair = authService.refresh(refreshToken);
         return ResponseEntity.ok(tokenPair);
     }
 }
