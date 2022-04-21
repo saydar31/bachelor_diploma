@@ -19,4 +19,6 @@ public interface UserService {
     List<UserInfo> getEmployees();
 
     List<UserInfo> getTeamSupervisors();
+
+    Optional<User> findByLogin(String login);
 }

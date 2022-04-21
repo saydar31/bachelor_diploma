@@ -23,6 +23,8 @@ public class User {
     private String firstName;
     private String lastName;
     private String middleName;
+    private String login;
+    private String password;
 
     @Enumerated(EnumType.STRING)
     private Position position;

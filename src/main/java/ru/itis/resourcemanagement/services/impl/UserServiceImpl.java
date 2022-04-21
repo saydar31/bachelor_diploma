@@ -45,4 +45,9 @@ public class UserServiceImpl implements UserService {
     public List<UserInfo> getTeamSupervisors() {
         return userRepository.findUsersByPosition(Position.TEAM_SUPERVISOR);
     }
+
+    @Override
+    public Optional<User> findByLogin(String login) {
+        return userRepository.findByLogin(login);
+    }
 }
