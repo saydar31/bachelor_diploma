@@ -10,15 +10,15 @@ import java.util.List;
 public interface TaskTypeRepository extends JpaRepository<TaskType, Long> {
 
     @Modifying
-    @Query(value = "update task_type\n" +
-            "set last_params_update = now(),\n" +
-            "    man_hour_per_square_meter_draft = mph,\n" +
-            "    constant_bias_draft = bias\n" +
-            "from (select type_id, regr_slope(fact_time, square) as mph,\n" +
-            "             regr_intercept(fact_time, square) as bias\n" +
-            "        from task\n" +
-            "        group by type_id\n" +
-            "    ) as new_drafts\n" +
+    @Query(value = "update task_type " +
+            "set last_params_update = now(), " +
+            "    man_hour_per_square_meter_draft = mph, " +
+            "    constant_bias_draft = bias " +
+            "from (select type_id, regr_slope(fact_time, square) as mph, " +
+            "             regr_intercept(fact_time, square) as bias " +
+            "        from task " +
+            "        group by type_id " +
+            "    ) as new_drafts " +
             "where new_drafts.type_id = task_type.id",
             nativeQuery = true)
     void updateDraftsByLeastSquares();
