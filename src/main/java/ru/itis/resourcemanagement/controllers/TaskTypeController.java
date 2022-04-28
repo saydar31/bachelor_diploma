@@ -2,6 +2,7 @@ package ru.itis.resourcemanagement.controllers;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import ru.itis.resourcemanagement.dto.projections.TaskListInfo;
 import ru.itis.resourcemanagement.model.TaskType;
 import ru.itis.resourcemanagement.services.TaskTypeService;
 
@@ -32,5 +33,10 @@ public class TaskTypeController {
     @PostMapping("/{id}/confirm")
     public void confirmNewParameters(@PathVariable Long id){
         taskTypeService.confirmParametersChange(id);
+    }
+
+    @GetMapping("/{id}/anomalies")
+    public List<TaskListInfo> getAnomalies(@PathVariable Long id){
+        return taskTypeService.getAnomalies(id);
     }
 }

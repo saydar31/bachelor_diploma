@@ -1,5 +1,6 @@
 package ru.itis.resourcemanagement.services;
 
+import ru.itis.resourcemanagement.dto.projections.TaskListInfo;
 import ru.itis.resourcemanagement.dto.projections.TaskTypeInfo;
 import ru.itis.resourcemanagement.model.TaskType;
 import ru.itis.resourcemanagement.model.TimeEntry;
@@ -12,4 +13,6 @@ public interface TaskTypeService {
     List<TaskType> getTaskTypes();
 
     void confirmParametersChange(Long id);
+
+    List<TaskListInfo> getAnomalies(Long id);
 }

@@ -33,4 +33,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             "                     inner join task_type_statistics tts on type_id = tts.id " +
             "            where abs(((t.fact_time - tts.constant_bias) / t.square) - tts.e) >= 3 * tts.e)", nativeQuery = true)
     void setAbnormalTasks();
+
+    List<TaskListInfo> findTaskByTypeAndAbnormalTrue(TaskType type);
 }
