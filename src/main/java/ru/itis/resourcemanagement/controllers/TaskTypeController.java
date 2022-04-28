@@ -2,6 +2,8 @@ package ru.itis.resourcemanagement.controllers;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import ru.itis.resourcemanagement.dto.TaskTypeChartData;
+import ru.itis.resourcemanagement.dto.projections.ChartData;
 import ru.itis.resourcemanagement.dto.projections.TaskListInfo;
 import ru.itis.resourcemanagement.model.TaskType;
 import ru.itis.resourcemanagement.services.TaskTypeService;
@@ -38,5 +40,9 @@ public class TaskTypeController {
     @GetMapping("/{id}/anomalies")
     public List<TaskListInfo> getAnomalies(@PathVariable Long id){
         return taskTypeService.getAnomalies(id);
+    }
+    @GetMapping("/{id}/chart-data")
+    public List<ChartData> getChartData(@PathVariable Long id){
+        return taskTypeService.getChartData(id);
     }
 }

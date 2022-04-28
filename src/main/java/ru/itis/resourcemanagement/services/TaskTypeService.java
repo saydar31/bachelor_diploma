@@ -1,5 +1,7 @@
 package ru.itis.resourcemanagement.services;
 
+import ru.itis.resourcemanagement.dto.TaskTypeChartData;
+import ru.itis.resourcemanagement.dto.projections.ChartData;
 import ru.itis.resourcemanagement.dto.projections.TaskListInfo;
 import ru.itis.resourcemanagement.dto.projections.TaskTypeInfo;
 import ru.itis.resourcemanagement.model.TaskType;
@@ -15,4 +17,6 @@ public interface TaskTypeService {
     void confirmParametersChange(Long id);
 
     List<TaskListInfo> getAnomalies(Long id);
+
+    List<ChartData> getChartData(Long id);
 }

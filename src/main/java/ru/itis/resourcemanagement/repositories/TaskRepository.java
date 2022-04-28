@@ -3,11 +3,9 @@ package ru.itis.resourcemanagement.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import ru.itis.resourcemanagement.dto.projections.ChartData;
 import ru.itis.resourcemanagement.dto.projections.TaskListInfo;
-import ru.itis.resourcemanagement.model.Project;
-import ru.itis.resourcemanagement.model.Task;
-import ru.itis.resourcemanagement.model.TaskType;
-import ru.itis.resourcemanagement.model.User;
+import ru.itis.resourcemanagement.model.*;
 
 import java.util.Collection;
 import java.util.List;
@@ -35,4 +33,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     void setAbnormalTasks();
 
     List<TaskListInfo> findTaskByTypeAndAbnormalTrue(TaskType type);
+
+    <T> List<T> findAllByTaskStatusOrderBySquare(TaskStatus taskStatus, Class<T> projection);
 }
