@@ -30,12 +30,15 @@ public class User implements UserInfo {
     @Enumerated(EnumType.STRING)
     private Position position;
 
-    @OneToMany
+    @OneToMany(mappedBy = "assignee")
     private List<Task> tasks;
 
-    @ManyToMany
-    private Set<Team> teams;
+    @ManyToOne
+    private Team team;
 
     @OneToMany(mappedBy = "supervisor")
     private Set<Project> projects;
+
+    @ManyToOne
+    private Grade grade;
 }

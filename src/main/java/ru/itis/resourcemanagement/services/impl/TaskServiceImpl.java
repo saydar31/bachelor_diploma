@@ -39,7 +39,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void createTask(Task task) {
         TaskType taskType = taskTypeService.getTaskTypeById(task.getType().getId());
-        double estimate = taskType.getManHourPerSquareMeter() * task.getSquare();
+        double estimate = taskType.getManHourPerUnit() * task.getUnitValue();
         task.setEstimate(estimate);
         task.setType(taskType);
         taskRepository.save(task);

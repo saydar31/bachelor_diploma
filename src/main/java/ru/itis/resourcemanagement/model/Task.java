@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,7 +22,7 @@ public class Task {
     private double estimate;
 
     @Min(0)
-    private Double square;
+    private Double unitValue;
 
     @ManyToOne(optional = false)
     private TaskType type;
@@ -39,4 +40,11 @@ public class Task {
 
     @Enumerated(EnumType.STRING)
     private TaskStatus taskStatus;
+
+    private LocalDateTime deadline;
+
+    private Integer recommendedOrder;
+
+    @ManyToOne
+    private TaskSet taskSet;
 }

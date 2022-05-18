@@ -3,24 +3,17 @@ package ru.itis.resourcemanagement.services.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import ru.itis.resourcemanagement.dto.TaskTypeChartData;
 import ru.itis.resourcemanagement.dto.projections.ChartData;
 import ru.itis.resourcemanagement.dto.projections.TaskListInfo;
-import ru.itis.resourcemanagement.dto.projections.TaskTypeInfo;
 import ru.itis.resourcemanagement.exceptions.BadRequestException;
 import ru.itis.resourcemanagement.exceptions.NotFoundException;
-import ru.itis.resourcemanagement.model.Task;
 import ru.itis.resourcemanagement.model.TaskStatus;
 import ru.itis.resourcemanagement.model.TaskType;
-import ru.itis.resourcemanagement.model.TimeEntry;
 import ru.itis.resourcemanagement.repositories.TaskRepository;
 import ru.itis.resourcemanagement.repositories.TaskTypeRepository;
-import ru.itis.resourcemanagement.services.TaskService;
 import ru.itis.resourcemanagement.services.TaskTypeService;
-import ru.itis.resourcemanagement.services.TimeEntryService;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -59,7 +52,7 @@ public class TaskTypeServiceImpl implements TaskTypeService {
 
     @Override
     public List<ChartData> getChartData(Long id) {
-        return taskRepository.findAllByTaskStatusOrderBySquare(TaskStatus.COSED, ChartData.class);
+        return taskRepository.findAllByTaskStatusOrderByUnitValue(TaskStatus.COSED, ChartData.class);
     }
 
     @Scheduled(cron = "0 0 2 * * MON-FRI")

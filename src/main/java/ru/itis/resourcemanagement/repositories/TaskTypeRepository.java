@@ -12,10 +12,10 @@ public interface TaskTypeRepository extends JpaRepository<TaskType, Long> {
     @Modifying
     @Query(value = "update task_type " +
             "set last_params_update = now(), " +
-            "    man_hour_per_square_meter_draft = mph, " +
+            "    man_hour_per_unit_draft = mph, " +
             "    constant_bias_draft = bias " +
-            "from (select type_id, regr_slope(fact_time, square) as mph, " +
-            "             regr_intercept(fact_time, square) as bias " +
+            "from (select type_id, regr_slope(fact_time, unit_value) as mph, " +
+            "             regr_intercept(fact_time, unit_value) as bias " +
             "        from task " +
             "        group by type_id " +
             "    ) as new_drafts " +

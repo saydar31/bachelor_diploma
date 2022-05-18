@@ -25,8 +25,11 @@ public class Team {
     @ManyToOne
     private User supervisor;
 
-    @ManyToMany(mappedBy = "teams")
+    @OneToMany(mappedBy = "team")
     private Set<User> members;
+
+    @ManyToMany
+    private Set<TaskType> taskTypes;
 
     public void setMembers(List<User> users){
         if (members == null){
@@ -34,6 +37,6 @@ public class Team {
         }
         members.clear();
         members.addAll(users);
-        users.forEach(user -> user.getTeams().add(this));
+        members.forEach(member -> member.setTeam(this));
     }
 }

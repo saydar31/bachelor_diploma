@@ -9,7 +9,7 @@ public interface TaskListInfo {
 
     double getEstimate();
 
-    Double getSquare();
+    Double getUnitValue();
 
     TaskTypeInfo getType();
 

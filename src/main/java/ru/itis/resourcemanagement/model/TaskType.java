@@ -19,11 +19,11 @@ public class TaskType {
 
     private String description;
 
-    private double manHourPerSquareMeter;
+    private double manHourPerUnit;
 
     private double constantBias = .0;
 
-    private double manHourPerSquareMeterDraft;
+    private double manHourPerUnitDraft;
 
     private double constantBiasDraft = .0;
 
@@ -33,7 +33,7 @@ public class TaskType {
     private LocalDateTime lastParamsUpdate;
 
     public void updateEstimateParams() {
-        manHourPerSquareMeter = manHourPerSquareMeterDraft;
+        manHourPerUnit = manHourPerUnitDraft;
         constantBias = constantBiasDraft;
     }
 }

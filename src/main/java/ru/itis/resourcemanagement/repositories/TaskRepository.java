@@ -29,10 +29,10 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             "where id in (select t.id " +
             "            from task t " +
             "                     inner join task_type_statistics tts on type_id = tts.id " +
-            "            where abs(((t.fact_time - tts.constant_bias) / t.square) - tts.e) >= 3 * tts.e)", nativeQuery = true)
+            "            where abs(((t.fact_time - tts.constant_bias) / t.unit_value) - tts.e) >= 3 * tts.e)", nativeQuery = true)
     void setAbnormalTasks();
 
     List<TaskListInfo> findTaskByTypeAndAbnormalTrue(TaskType type);
 
-    <T> List<T> findAllByTaskStatusOrderBySquare(TaskStatus taskStatus, Class<T> projection);
+    <T> List<T> findAllByTaskStatusOrderByUnitValue(TaskStatus taskStatus, Class<T> projection);
 }
