@@ -41,4 +41,17 @@ public class User implements UserInfo {
 
     @ManyToOne
     private Grade grade;
+
+    @Transient
+    private double timeRemain;
+
+    public int dayRemain() {
+        return (int) (timeRemain / 8);
+    }
+
+    @Transient
+    private boolean estimateIntruder;
+
+    @Transient
+    private Project currentWorkingProject;
 }

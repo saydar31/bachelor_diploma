@@ -10,6 +10,7 @@ import ru.itis.resourcemanagement.dto.projections.UserInfo;
 import ru.itis.resourcemanagement.exceptions.BadRequestException;
 import ru.itis.resourcemanagement.exceptions.NotFoundException;
 import ru.itis.resourcemanagement.model.Position;
+import ru.itis.resourcemanagement.model.TaskType;
 import ru.itis.resourcemanagement.model.Team;
 import ru.itis.resourcemanagement.model.User;
 import ru.itis.resourcemanagement.repositories.TeamRepository;
@@ -95,5 +96,9 @@ public class TeamService {
 
     public Optional<Team> findTeam(Long teamId) {
         return teamRepository.findById(teamId);
+    }
+
+    public List<Team> getTeamsForType(TaskType type) {
+        return teamRepository.findAllByTaskTypesContains(type);
     }
 }

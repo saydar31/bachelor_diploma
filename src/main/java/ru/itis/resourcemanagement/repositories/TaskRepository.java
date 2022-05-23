@@ -35,4 +35,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     List<TaskListInfo> findTaskByTypeAndAbnormalTrue(TaskType type);
 
     <T> List<T> findAllByTaskStatusOrderByUnitValue(TaskStatus taskStatus, Class<T> projection);
+
+    List<Task> findByAssigneeAndTaskStatus(User assignee, TaskStatus taskStatus);
 }
