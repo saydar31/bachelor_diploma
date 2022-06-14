@@ -18,6 +18,10 @@ import java.util.Set;
 @Setter
 @Builder
 @Entity
+@Table(indexes = {
+        @Index(name = "i_type_fk", columnList = "type_id"),
+        @Index(name = "i_assignee_fk", columnList = "assignee_id"),
+})
 public class Task {
     @Id
     private Long id;
@@ -26,10 +30,10 @@ public class Task {
 
     private double estimate;
 
-    public double getEstimateCalculated(){
+    public double getEstimateCalculated() {
         double gradeCoefficient = assignee == null ?
                 1.0 : assignee.getGrade().getCoefficient();
-        return (type.getConstantBias() + type.getManHourPerUnit() * unitValue) / gradeCoefficient;
+        return (type.getCoefficients().getConstantBias() + type.getCoefficients().getManHourPerUnit() * unitValue) / gradeCoefficient;
     }
 
     @Min(0)
@@ -42,9 +46,6 @@ public class Task {
     private User assignee;
 
     @ManyToOne
-    private Team team;
-
-    @ManyToOne
     private Project project;
 
     private boolean abnormal;
@@ -53,8 +54,6 @@ public class Task {
     private TaskStatus taskStatus;
 
     private LocalDateTime deadline;
-
-    private Integer recommendedOrder;
 
     @ManyToOne
     private TaskSet taskSet;

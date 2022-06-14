@@ -19,8 +19,6 @@ public class TaskSet {
     @OneToMany(mappedBy = "taskSet")
     private Set<Task> tasks;
 
-    private LocalDateTime commonDeadLine;
-
     @ManyToOne
     private Project project;
 }

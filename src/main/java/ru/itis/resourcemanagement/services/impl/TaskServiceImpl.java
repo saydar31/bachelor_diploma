@@ -1,6 +1,5 @@
 package ru.itis.resourcemanagement.services.impl;
 
-import com.google.common.collect.Sets;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedAcyclicGraph;
@@ -46,7 +45,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void createTask(Task task) {
         TaskType taskType = taskTypeService.getTaskTypeById(task.getType().getId());
-        double estimate = taskType.getManHourPerUnit() * task.getUnitValue();
+        double estimate = taskType.getCoefficients().getManHourPerUnit() * task.getUnitValue();
         task.setEstimate(estimate);
         task.setType(taskType);
         taskRepository.save(task);
@@ -66,11 +65,6 @@ public class TaskServiceImpl implements TaskService {
                 .employee(user)
                 .build();
         return timeEntryRepository.save(timeEntry);
-    }
-
-    @Override
-    public List<Task> findByTaskType(TaskType taskType) {
-        return taskRepository.findAllByType(taskType);
     }
 
     @Override
@@ -99,15 +93,6 @@ public class TaskServiceImpl implements TaskService {
         return taskRepository.getTaskByProjectId(id);
     }
 
-    @Override
-    @Transactional
-    public void assignTaskToTeam(Long id, Long teamId, User user) {
-        Task task = taskRepository.findById(id)
-                .orElseThrow(NotFoundException::new);
-        Team team = teamService.findTeam(teamId)
-                .orElseThrow(NotFoundException::new);
-        task.setTeam(team);
-    }
 
     @Scheduled(cron = "0 0 2 * * MON-FRI")
     public void setAbnormalTasks() {

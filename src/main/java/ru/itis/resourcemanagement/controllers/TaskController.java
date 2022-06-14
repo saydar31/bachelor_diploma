@@ -51,10 +51,4 @@ public class TaskController {
         List<TaskListInfo> tasksForUser = taskService.getTasksForUser(user);
         return ResponseEntity.ok(tasksForUser);
     }
-
-    @PostMapping("/{id}/assign-team/{teamId}")
-    @PreAuthorize("hasAuthority('PROJECT_SUPERVISOR')")
-    public void assign(@PathVariable Long id, @PathVariable Long teamId, @AuthenticationPrincipal User user) {
-        taskService.assignTaskToTeam(id, teamId, user);
-    }
 }

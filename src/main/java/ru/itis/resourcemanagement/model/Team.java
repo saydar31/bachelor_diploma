@@ -25,7 +25,12 @@ public class Team {
     @ManyToOne
     private User supervisor;
 
-    @OneToMany(mappedBy = "team")
+    @ManyToMany
+    @JoinTable(
+            name = "team_to_user",
+            joinColumns = @JoinColumn(name = "team_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
     private Set<User> members;
 
     @ManyToMany
@@ -37,6 +42,6 @@ public class Team {
         }
         members.clear();
         members.addAll(users);
-        members.forEach(member -> member.setTeam(this));
+        members.forEach(member -> member.getTeams().add(this));
     }
 }

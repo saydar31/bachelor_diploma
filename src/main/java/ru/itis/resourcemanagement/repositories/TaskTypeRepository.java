@@ -23,6 +23,4 @@ public interface TaskTypeRepository extends JpaRepository<TaskType, Long> {
             nativeQuery = true)
     void updateDraftsByLeastSquares();
 
-    @Query("select distinct(tt) from TaskType tt left join fetch tt.taskTypeProperties")
-    List<TaskType> getTypesWithProperties();
 }

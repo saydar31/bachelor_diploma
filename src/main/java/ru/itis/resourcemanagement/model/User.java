@@ -33,8 +33,13 @@ public class User implements UserInfo {
     @OneToMany(mappedBy = "assignee")
     private List<Task> tasks;
 
-    @ManyToOne
-    private Team team;
+    @ManyToMany
+    @JoinTable(
+            name = "team_to_user",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "team_id")
+    )
+    private Set<Team> teams;
 
     @OneToMany(mappedBy = "supervisor")
     private Set<Project> projects;

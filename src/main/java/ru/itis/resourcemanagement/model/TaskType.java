@@ -1,6 +1,7 @@
 package ru.itis.resourcemanagement.model;
 
 import lombok.*;
+import ru.itis.resourcemanagement.model.embeded.TaskCoefficients;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -19,21 +20,17 @@ public class TaskType {
 
     private String description;
 
-    private double manHourPerUnit;
-
-    private double constantBias = .0;
-
-    private double manHourPerUnitDraft;
-
-    private double constantBiasDraft = .0;
-
-    @OneToMany
-    private List<TaskTypeProperty> taskTypeProperties;
+    @Embedded
+    private TaskCoefficients coefficients;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "manHourPerUnit", column = @Column(name = "man_hour_per_unit_draft")),
+            @AttributeOverride(name="constantBias", column = @Column(name = "constant_bias_draft"))
+    })
+    private TaskCoefficients coefficientsDraft;
 
     private LocalDateTime lastParamsUpdate;
 
     public void updateEstimateParams() {
-        manHourPerUnit = manHourPerUnitDraft;
-        constantBias = constantBiasDraft;
     }
 }

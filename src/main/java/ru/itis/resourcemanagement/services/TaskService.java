@@ -15,13 +15,10 @@ public interface TaskService {
 
     TimeEntry track(long taskId, TimeEntryDto timeEntry, User user);
 
-    List<Task> findByTaskType(TaskType taskType);
-
     List<TaskListInfo> getTasksForUser(User user);
 
     TaskListInfo getTask(long taskId, User user);
 
     List<TaskListInfo> getTasksForProject(Long id);
 
-    void assignTaskToTeam(Long id, Long teamId, User user);
 }

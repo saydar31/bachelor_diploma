@@ -19,9 +19,10 @@ public class Project {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Column(unique = true, nullable = false)
     private String name;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private User supervisor;
 
     @Override

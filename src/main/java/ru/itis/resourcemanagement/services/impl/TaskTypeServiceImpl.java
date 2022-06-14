@@ -32,7 +32,7 @@ public class TaskTypeServiceImpl implements TaskTypeService {
 
     @Override
     public List<TaskType> getTaskTypes() {
-        return taskTypeRepository.getTypesWithProperties();
+        return taskTypeRepository.findAll();
     }
 
     @Override
