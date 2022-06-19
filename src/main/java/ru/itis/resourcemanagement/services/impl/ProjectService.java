@@ -2,6 +2,7 @@ package ru.itis.resourcemanagement.services.impl;
 
 import org.springframework.stereotype.Component;
 import ru.itis.resourcemanagement.dto.projections.ProjectInfo;
+import ru.itis.resourcemanagement.model.Project;
 import ru.itis.resourcemanagement.model.User;
 import ru.itis.resourcemanagement.repositories.ProjectRepository;
 import ru.itis.resourcemanagement.services.TaskService;
@@ -24,5 +25,9 @@ public class ProjectService {
 
     public Optional<ProjectInfo> getProject(Long id) {
         return projectRepository.findProjectById(id);
+    }
+
+    public Project getProjectById(Long id) {
+        return projectRepository.findById(id).orElseThrow();
     }
 }

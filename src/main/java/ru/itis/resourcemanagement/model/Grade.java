@@ -18,7 +18,7 @@ public class Grade {
     @SequenceGenerator(name = "grade_seq")
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false )
     private String name;
 
     @Column(nullable = false)

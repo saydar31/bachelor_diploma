@@ -28,21 +28,22 @@ public class TaskTypeController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('PROJECT_SUPERVISOR')")
-    public TaskType getType(@PathVariable Long id){
+    public TaskType getType(@PathVariable Long id) {
         return taskTypeService.getTaskTypeById(id);
     }
 
     @PostMapping("/{id}/confirm")
-    public void confirmNewParameters(@PathVariable Long id){
+    public void confirmNewParameters(@PathVariable Long id) {
         taskTypeService.confirmParametersChange(id);
     }
 
     @GetMapping("/{id}/anomalies")
-    public List<TaskListInfo> getAnomalies(@PathVariable Long id){
+    public List<TaskListInfo> getAnomalies(@PathVariable Long id) {
         return taskTypeService.getAnomalies(id);
     }
+
     @GetMapping("/{id}/chart-data")
-    public List<ChartData> getChartData(@PathVariable Long id){
+    public List<ChartData> getChartData(@PathVariable Long id) {
         return taskTypeService.getChartData(id);
     }
 }

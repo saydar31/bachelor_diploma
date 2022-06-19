@@ -7,9 +7,11 @@ import org.jgrapht.traverse.TopologicalOrderIterator;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import ru.itis.resourcemanagement.dto.TaskDistributionDto;
 import ru.itis.resourcemanagement.dto.TimeEntryDto;
 import ru.itis.resourcemanagement.dto.projections.ProjectInfo;
 import ru.itis.resourcemanagement.dto.projections.TaskListInfo;
+import ru.itis.resourcemanagement.dto.projections.TimeEntryInfo;
 import ru.itis.resourcemanagement.exceptions.NotFoundException;
 import ru.itis.resourcemanagement.model.*;
 import ru.itis.resourcemanagement.repositories.TaskRepository;
@@ -45,9 +47,9 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void createTask(Task task) {
         TaskType taskType = taskTypeService.getTaskTypeById(task.getType().getId());
-        double estimate = taskType.getCoefficients().getManHourPerUnit() * task.getUnitValue();
-        task.setEstimate(estimate);
+        Project project = projectService.getProjectById(task.getProject().getId());
         task.setType(taskType);
+        task.setProject(project);
         taskRepository.save(task);
     }
 
@@ -70,13 +72,57 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional
     public List<TaskListInfo> getTasksForUser(User user) {
+        return getTaskListByUserAndStatus(user, TaskStatus.OPEN);
+    }
+
+    @Override
+    @Transactional
+    public List<TaskListInfo> getClosedTasksForUser(User user) {
+        return getTaskListByUserAndStatus(user, TaskStatus.CLOSED);
+    }
+
+    @Override
+    @Transactional
+    public Collection<Task> distribute(TaskDistributionDto taskDistribution) {
+        List<Task> tasks = taskRepository.findAllById(taskDistribution.getTaskIdList());
+        tasks.forEach(t -> t.setDeadline(taskDistribution.getDeadline()));
+
+        Graph<Task, DefaultEdge> taskGraph = new DirectedAcyclicGraph<>(DefaultEdge.class);
+        for (Task task : tasks) {
+            taskGraph.addVertex(task);
+            for (Task subtask : task.getSubtasks()) {
+                if (subtask.getTaskStatus().equals(TaskStatus.OPEN)) {
+                    taskGraph.addVertex(subtask);
+                    taskGraph.addEdge(subtask, task);
+                }
+            }
+        }
+        TopologicalOrderIterator<Task, DefaultEdge> topologicalOrder = new TopologicalOrderIterator<>(taskGraph);
+        topologicalOrder.forEachRemaining(this::distribute);
+
+        return tasks;
+    }
+
+    @Override
+    public List<TimeEntryInfo> getEntries(Long id) {
+        return timeEntryRepository.findAllByTaskId(id, TimeEntryInfo.class);
+    }
+
+    @Override
+    @Transactional
+    public void closeTask(Long id) {
+        taskRepository.findById(id)
+                .ifPresent(t -> t.setTaskStatus(TaskStatus.CLOSED));
+    }
+
+    private List<TaskListInfo> getTaskListByUserAndStatus(User user, TaskStatus status) {
         if (user.getPosition().equals(Position.EMPLOYEE)) {
-            return taskRepository.getTaskByAssignee(user);
+            return taskRepository.getTaskByAssigneeAndTaskStatus(user, status);
         } else if (user.getPosition().equals(Position.PROJECT_SUPERVISOR)) {
             List<Long> projectIdList = projectService.getProjects(user).stream()
                     .map(ProjectInfo::getId)
                     .collect(Collectors.toUnmodifiableList());
-            return taskRepository.findAllByProjectIdIn(projectIdList);
+            return taskRepository.findAllByProjectIdInAndTaskStatus(projectIdList, status);
         } else {
             throw new NotFoundException();
         }
@@ -99,28 +145,6 @@ public class TaskServiceImpl implements TaskService {
         taskRepository.setAbnormalTasks();
     }
 
-
-    /*
-    Алгоритм: 1) топологическая сортировка задач
-    добавить в список зависимые задания до этого не распределенные
-
-     */
-    public void distributeTasks(TaskSet taskSet) {
-        List<Task> tasks = new ArrayList<>(taskSet.getTasks());
-
-        Graph<Task, DefaultEdge> taskGraph = new DirectedAcyclicGraph<>(DefaultEdge.class);
-        for (Task task : tasks) {
-            taskGraph.addVertex(task);
-            for (Task subtask : task.getSubtasks()) {
-                if (subtask.getTaskStatus().equals(TaskStatus.OPEN)) {
-                    taskGraph.addVertex(subtask);
-                    taskGraph.addEdge(subtask, task);
-                }
-            }
-        }
-        TopologicalOrderIterator<Task, DefaultEdge> topologicalOrder = new TopologicalOrderIterator<>(taskGraph);
-        topologicalOrder.forEachRemaining(this::distribute);
-    }
 
     public void distribute(Task task) {
         List<Team> teams = teamService.getTeamsForType(task.getType());
@@ -161,6 +185,10 @@ public class TaskServiceImpl implements TaskService {
                         .filter(user -> !user.isEstimateIntruder())
                         .findAny()
                 ).or(() -> users.stream().findAny())
-                .ifPresent(task::setAssignee);
+                .ifPresent(user -> {
+                    user.getTasks().add(task);
+                    task.setAssignee(user);
+                    task.setEstimate(task.getEstimateCalculated() * user.getGrade().getCoefficient());
+                });
     }
 }

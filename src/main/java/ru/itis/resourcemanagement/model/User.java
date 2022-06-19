@@ -50,10 +50,6 @@ public class User implements UserInfo {
     @Transient
     private double timeRemain;
 
-    public int dayRemain() {
-        return (int) (timeRemain / 8);
-    }
-
     @Transient
     private boolean estimateIntruder;
 

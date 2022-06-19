@@ -52,7 +52,7 @@ public class TaskTypeServiceImpl implements TaskTypeService {
 
     @Override
     public List<ChartData> getChartData(Long id) {
-        return taskRepository.findAllByTaskStatusOrderByUnitValue(TaskStatus.COSED, ChartData.class);
+        return taskRepository.findAllByTaskStatusOrderByUnitValue(TaskStatus.CLOSED, ChartData.class);
     }
 
     @Scheduled(cron = "0 0 2 * * MON-FRI")

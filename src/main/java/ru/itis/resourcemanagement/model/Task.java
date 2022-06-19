@@ -24,7 +24,10 @@ import java.util.Set;
 })
 public class Task {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String description;
 
     private double factTime = .0;
 
@@ -51,7 +54,7 @@ public class Task {
     private boolean abnormal;
 
     @Enumerated(EnumType.STRING)
-    private TaskStatus taskStatus;
+    private TaskStatus taskStatus = TaskStatus.OPEN;
 
     private LocalDateTime deadline;
 

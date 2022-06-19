@@ -51,7 +51,7 @@ public class AuthService {
     private TokenPair getTokenPair(User user){
         String accessToken = JWT.create()
                 .withIssuer(ISSUER)
-                .withExpiresAt(Date.from(Instant.now().plus(1L, ChronoUnit.HOURS)))
+                .withExpiresAt(Date.from(Instant.now().plus(7L, ChronoUnit.DAYS)))
                 .withSubject(user.getId().toString())
                 .sign(algorithm);
         String refreshToken = UUID.randomUUID().toString() + System.currentTimeMillis();

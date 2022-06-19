@@ -11,4 +11,6 @@ public interface TimeEntryRepository extends JpaRepository<TimeEntry, Long> {
 
     @Query("select te from TimeEntry te where te.task.type = ?1")
     List<TimeEntry> findAllByTaskType(TaskType taskType);
+
+    <T> List<T> findAllByTaskId(Long id, Class<T> tClass);
 }

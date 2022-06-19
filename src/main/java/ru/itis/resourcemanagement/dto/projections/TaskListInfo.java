@@ -9,6 +9,8 @@ public interface TaskListInfo {
 
     double getEstimate();
 
+    String getDescription();
+
     Double getUnitValue();
 
     TaskTypeInfo getType();
