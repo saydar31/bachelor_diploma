@@ -130,7 +130,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public TaskListInfo getTask(long taskId, User user) {
-        return taskRepository.findTaskByIdAndAssignee(taskId, user)
+        return taskRepository.findTaskById(taskId)
                 .orElseThrow(NotFoundException::new);
     }
 
@@ -155,7 +155,7 @@ public class TaskServiceImpl implements TaskService {
             List<Task> usersOpenTasks = taskRepository.findByAssigneeAndTaskStatus(user, TaskStatus.OPEN);
             double timeRemain = usersOpenTasks.stream()
                     .mapToDouble(t -> Math.max(t.getEstimate() - t.getFactTime(), 0.0))
-                    .sum();
+                    .sum() + task.getEstimateCalculated() * user.getGrade().getCoefficient();
             boolean hasEstimateViolation = usersOpenTasks.stream()
                     .anyMatch(t -> t.getFactTime() > t.getEstimate());
             Project project = usersOpenTasks.stream()
@@ -170,22 +170,7 @@ public class TaskServiceImpl implements TaskService {
             user.setCurrentWorkingProject(project);
         }
 
-        int daysTillDeadline = DateUtils.workingDaysBetween(LocalDate.now(), task.getDeadline().minusDays(1L));
-
-        users.stream()
-                .filter(user -> !user.isEstimateIntruder()
-                        && daysTillDeadline > task.getEstimateCalculated() / user.getGrade().getCoefficient() / 8
-                        && task.getProject().equals(user.getCurrentWorkingProject()))
-                .findAny()
-                .or(() -> users.stream()
-                        .filter(user -> !user.isEstimateIntruder()
-                                && daysTillDeadline > task.getEstimateCalculated() / user.getGrade().getCoefficient() / 8
-                        ).findAny()
-                ).or(() -> users.stream()
-                        .filter(user -> !user.isEstimateIntruder())
-                        .findAny()
-                ).or(() -> users.stream().findAny())
-                .ifPresent(user -> {
+        users.stream().min(Comparator.comparing(User::getTimeRemain)).ifPresent(user -> {
                     user.getTasks().add(task);
                     task.setAssignee(user);
                     task.setEstimate(task.getEstimateCalculated() * user.getGrade().getCoefficient());

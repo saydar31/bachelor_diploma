@@ -32,5 +32,6 @@ public class TaskType {
     private LocalDateTime lastParamsUpdate;
 
     public void updateEstimateParams() {
+        coefficients = coefficientsDraft;
     }
 }
